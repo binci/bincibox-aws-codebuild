@@ -18,14 +18,13 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375 --storage-driver=overlay &
-      - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
+      - dockerd_start
   build:
     commands:
       - binci test
 ```
 
-When you choose to run builds on a custom container, AWS ignores the Docker `ENTRYPOINT`, which Amazon uses to start the docker daemon in their own containers. Therefore, the two commands in the `pre_build` path above are necessary to make sure Docker is running before starting Binci.
+When you choose to run builds on a custom container, AWS ignores the Docker `ENTRYPOINT`, which Amazon uses to start the docker daemon in their own containers. Therefore, the `dockerd_start` command in the `pre_build` path above is necessary to make sure Docker is running before starting Binci.
 
 ## License
 All content in this repository is openly licensed under the MIT license unless otherwise noted. Original content is Copyright 2017 by the Binci Team.
