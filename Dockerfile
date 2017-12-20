@@ -12,6 +12,15 @@
 
 FROM ubuntu:14.04.5
 
+ENV DOCKER_BUCKET="download.docker.com" \
+    DOCKER_VERSION="17.09.0-ce" \
+    DOCKER_CHANNEL="stable" \
+    DOCKER_SHA256="a9e90a73c3cdfbf238f148e1ec0eaff5eb181f92f35bdd938fd7dab18e1c4647" \
+    DIND_COMMIT="3b5fac462d21ca164b3778647420016315289034" \
+    DOCKER_COMPOSE_VERSION="1.16.1"
+
+COPY dockerd-entrypoint.sh /usr/local/bin/
+
 # Building git from source code:
 #   Ubuntu's default git package is built with broken gnutls. Rebuild git with openssl.
 ##########################################################################
@@ -43,25 +52,12 @@ RUN apt-get update \
 # Install dependencies by all python images equivalent to buildpack-deps:jessie
 # on the public repos.
     && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
-
-RUN wget "https://bootstrap.pypa.io/get-pip.py" -O /tmp/get-pip.py \
+    && apt-get clean \
+    && wget "https://bootstrap.pypa.io/get-pip.py" -O /tmp/get-pip.py \
+    && cd /tmp \
     && python /tmp/get-pip.py \
     && pip install awscli==1.11.157 \
-    && rm -fr /var/lib/apt/lists/* /tmp/* /var/tmp/* 
- 
-
-ENV DOCKER_BUCKET="download.docker.com" \
-    DOCKER_VERSION="17.09.0-ce" \
-    DOCKER_CHANNEL="stable" \
-    DOCKER_SHA256="a9e90a73c3cdfbf238f148e1ec0eaff5eb181f92f35bdd938fd7dab18e1c4647" \
-    DIND_COMMIT="3b5fac462d21ca164b3778647420016315289034" \
-    DOCKER_COMPOSE_VERSION="1.16.1"
-
-COPY dockerd-entrypoint.sh /usr/local/bin/
-
-# From the docker:17.09
-RUN set -x \
+    && rm -fr /var/lib/apt/lists/* /tmp/* /var/tmp/* \
     && curl -sL https://deb.nodesource.com/setup_8.x | bash - \
     && curl -fSL "https://${DOCKER_BUCKET}/linux/static/${DOCKER_CHANNEL}/x86_64/docker-${DOCKER_VERSION}.tgz" -o docker.tgz \
     && echo "${DOCKER_SHA256} *docker.tgz" | sha256sum -c - \
@@ -84,8 +80,8 @@ RUN set -x \
     && docker-compose version \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean \
-    && npm install -g binci
-
+    && npm install -g binci \
+    && ln -s /usr/local/bin/dockerd-entrypoint.sh /usr/local/bin/dockerd_start
 
 VOLUME /var/lib/docker
 
