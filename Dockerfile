@@ -12,7 +12,8 @@
 
 FROM ubuntu:14.04.5
 
-ENV DOCKER_BUCKET="download.docker.com" \
+ENV BINCI_VERSION="5.1.0" \
+    DOCKER_BUCKET="download.docker.com" \
     DOCKER_VERSION="17.09.0-ce" \
     DOCKER_CHANNEL="stable" \
     DOCKER_SHA256="a9e90a73c3cdfbf238f148e1ec0eaff5eb181f92f35bdd938fd7dab18e1c4647" \
@@ -80,7 +81,7 @@ RUN apt-get update \
     && docker-compose version \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean \
-    && npm install -g binci \
+    && npm install -g binci@${BINCI_VERSION} \
     && ln -s /usr/local/bin/dockerd-entrypoint.sh /usr/local/bin/dockerd_start
 
 VOLUME /var/lib/docker
