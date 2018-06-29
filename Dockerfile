@@ -57,7 +57,7 @@ RUN apt-get update \
     && wget "https://bootstrap.pypa.io/get-pip.py" -O /tmp/get-pip.py \
     && cd /tmp \
     && python /tmp/get-pip.py \
-    && pip install awscli==1.11.157 \
+    && pip install awscli==1.15.49 \
     && rm -fr /var/lib/apt/lists/* /tmp/* /var/tmp/* \
     && curl -sL https://deb.nodesource.com/setup_8.x | bash - \
     && curl -fSL "https://${DOCKER_BUCKET}/linux/static/${DOCKER_CHANNEL}/x86_64/docker-${DOCKER_VERSION}.tgz" -o docker.tgz \
