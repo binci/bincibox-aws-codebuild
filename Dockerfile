@@ -90,7 +90,7 @@ RUN set -ex \
 
 # Customize
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
-    && sudo apt-get install -y nodejs \
+    && sudo apt-get install -y nodejs gettext \
     && npm install -g binci@${BINCI_VERSION} \
     && ln -s /usr/local/bin/dockerd-entrypoint.sh /usr/local/bin/dockerd_start
 
